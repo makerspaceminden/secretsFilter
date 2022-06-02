@@ -10,22 +10,24 @@ class KeyFilter:
     isVerbose: bool
     doReverse: bool
 
-    def __init__(self, keyObject, scanDirPath: str, preDelimiter: str = "{", postDelimiter: str = "}", verbosity: bool = False, doReverse: bool = False):
+    def __init__(self, mappingObject, scanDirPath: str, preDelimiter: str = "{", postDelimiter: str = "}", isVerbose: bool = False, doReverse: bool = False):
         """Initializes a KeyFilter object
-        keyObject{dict}:    Dictionary of name-->secret mappings. Example: {"key1":"TopSecret", "key2":"123456"},
+        mappingObject{dict}:Dictionary of name-->secret mappings. Example: {"key1":"TopSecret", "key2":"123456"},
         scanDirPath{str}:   Path to the directory where the scan should be performed. overwrites files in there, so write rights are required.
         preDelimiter{str}:  Delimiter used in replacing the secret keys. Prepended before the name.
         postDelimiter{str}: Delimiter used in replacing the secret keys. Appended after the name.
-            Example: preDelimiter={, postDelimiter=} => "TopSecret" -> "{key1}" """
+            Example: preDelimiter={, postDelimiter=} => "TopSecret" -> "{key1}" 
+        isVerbose: Do logging on stdout.
+        doReverse: Reverses the process, replaces delimiters+name with secret (instead of secret->delimiters+name). """
 
-        self.mapping = keyObject
+        self.mapping = mappingObject
         self.scanDirPath = scanDirPath
         self.preDelimiter = preDelimiter
         self.postDelimiter = postDelimiter
-        self.isVerbose = verbosity
+        self.isVerbose = isVerbose
         self.doReverse = doReverse
 
-    def doScan(self):
+    def applyFilter(self):
         for dirName, subdirList, fileList in os.walk(self.scanDirPath):
             if(self.isVerbose):
                 print("Filtering dir \""+dirName+"\": ")

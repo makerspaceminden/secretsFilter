@@ -10,20 +10,20 @@ import keyFilter
 if __name__ == "__main__": # Main
 
 	# Arguments for the program
-	parser = argparse.ArgumentParser(description="MSM AKAP filter\n\
-        Program to filter out any (A)PI (K)eys (A)nd (P)asswords (and other secrets) . \
-        Replaces them with a defined string in curly brackets e.g. {APIKey}")
+	parser = argparse.ArgumentParser(description="MSM Secrets filter\n\
+        MSM Secrets filter Program to filter out any API keys, passwords and other \
+   		secrets. Replaces them with a defined string e.g. {APIKey}")
+	parser.add_argument('-s', '--scanDir',
+		            dest='scanDir',
+		            help='Directory where files should be scanned for the names / secrets',
+			        required=True,
+		            type=str
+		            )
 	parser.add_argument('-f', '--filter',
 		            default='./filter.json',
 		            dest='filterFile',
 		            help='JSON File containing an array of name: secret mapping: \n\
                         \tExample: {"WifiPassword": "01234567"}',
-		            type=str
-		            )
-	parser.add_argument('-s', '--scanDir',
-			        required=True,
-		            dest='scanDir',
-		            help='Directory where files should be scanned for the names / secrets',
 		            type=str
 		            )
 	parser.add_argument('-d', '--delimiters',
@@ -64,4 +64,4 @@ if __name__ == "__main__": # Main
 		jsonData = json.loads(jsonFile.read())
 
 	fileFilter = keyFilter.KeyFilter(jsonData, args.scanDir, preDelimiter, postDelimiter, isVerbose, doReverse)
-	fileFilter.doScan()
+	fileFilter.applyFilter()
